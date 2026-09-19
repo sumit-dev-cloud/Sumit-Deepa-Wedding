@@ -22,6 +22,7 @@
           colors: {
             ivory: '#FAF7F2',
             champagne: '#E9DDCF',
+            marigold: '#FFB300',
             sage: '#89947D',
             blush: '#D8B9AE',
             rosepetal: '#E4A89B',
@@ -81,12 +82,12 @@
     /* Falling Petals Shower Animation */
     #petal-canvas {
       position: fixed;
-      top: 0;
-      left: 0;
+      inset: 0;
       width: 100vw;
       height: 100vh;
       pointer-events: none;
-      z-index: 0;
+      z-index: 40;
+      display: block;
     }
     header,
     main,
@@ -312,11 +313,86 @@ footer::after {
 }
 
 
+
+    /* =========================================================
+       MOBILE / iPHONE 16 BACKGROUND FIX
+       Keep the decorative artwork at the top and bottom only.
+       The centre area stays clean so the invitation remains readable.
+       ========================================================= */
+    @media (max-width: 640px) {
+      header#home {
+        position: relative;
+        min-height: 100svh;
+        isolation: isolate;
+      }
+
+      header#home .mandap-backdrop {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+        background: linear-gradient(
+          to bottom,
+          rgba(250,247,242,.82) 0%,
+          rgba(250,247,242,.96) 30%,
+          rgba(250,247,242,.96) 70%,
+          rgba(250,247,242,.84) 100%
+        );
+        opacity: 1;
+        filter: none;
+        mix-blend-mode: normal;
+        overflow: hidden;
+        pointer-events: none;
+      }
+
+      /* Top artwork: preserve its natural aspect ratio and clip it to
+         the top portion instead of stretching it over the full phone. */
+      header#home .mandap-backdrop::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 31%;
+        background: url("images/jharokha-top.jpg") center top / 100% auto no-repeat;
+        opacity: .24;
+        filter: blur(.7px) saturate(.78);
+      }
+
+      /* Bottom artwork: preserve its natural aspect ratio and anchor it
+         to the bottom. It cannot rise into the invitation copy. */
+      header#home .mandap-backdrop::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 31%;
+        background: url("images/jharokha-bottom.jpg") center bottom / 100% auto no-repeat;
+        opacity: .22;
+        filter: blur(.7px) saturate(.78);
+      }
+
+      /* Mobile side framing: subtle and fixed to the sides. */
+      main::before,
+      main::after {
+        width: 30px;
+        opacity: .22;
+      }
+
+      header#home > nav,
+      header#home > div:not(.mandap-backdrop) {
+        position: relative;
+        z-index: 10;
+      }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior:auto; }
       .scroll-guide { animation: none;}
       *,*::before,*::after { transition-duration:.10ms !important; }
-      #petal-canvas { display: none; }
+      #petal-canvas { display: block; }
     }
 
     @media (max-width: 640px) {
@@ -375,12 +451,50 @@ footer::after {
   }
 }
 
+  
+
+    /* Keep falling petals visible and smooth on phones. */
+    @media (max-width: 640px) {
+      #petal-canvas {
+        z-index: 40;
+        display: block;
+      }
+    }
+
+    /* Final mobile override: prevents the original desktop background
+       declarations from re-expanding the artwork on narrow screens. */
+    @media (max-width: 640px) {
+      header#home .mandap-backdrop {
+        background-image: linear-gradient(
+          to bottom,
+          rgba(250,247,242,.82) 0%,
+          rgba(250,247,242,.96) 30%,
+          rgba(250,247,242,.96) 70%,
+          rgba(250,247,242,.84) 100%
+        );
+        background-size: 100% 100%;
+        background-position: center;
+        background-repeat: no-repeat;
+        opacity: 1;
+        filter: none;
+        mix-blend-mode: normal;
+      }
+      header#home .mandap-backdrop::before {
+        background: url("images/jharokha-top.jpg") center top / 100% auto no-repeat;
+        opacity: .24;
+      }
+      header#home .mandap-backdrop::after {
+        background: url("images/jharokha-bottom.jpg") center bottom / 100% auto no-repeat;
+        opacity: .22;
+      }
+    }
+
   </style>
 </head>
 
 <body class="font-sans antialiased relative">
 
-   <audio id="wedding-music" src="images/wed-invi.mp3" loop preload="none"></audio>
+   <audio id="wedding-music" src="images/wed-invi.mpeg" loop preload="none"></audio>
 
 <button
   id="music-toggle"
@@ -414,7 +528,7 @@ footer::after {
      <div class="mandap-backdrop" aria-hidden="true"></div>
 
     <nav class="relative z-10 mx-auto flex max-w-6xl items-center justify-between px-5 py-6 sm:px-8">
-      <a href="#home" class="font-serif text-xl tracking-[.18em] text-forest">S&amp;D</a>
+      <a href="#home" class="font-serif text-xl tracking-[.18em] text-forest">D &amp; S</a>
       <a href="#events" class="rounded-full border border-forest/15 bg-white/40 px-4 py-2 text-xs tracking-[.16em] text-forest backdrop-blur-sm transition hover:bg-forest hover:text-white">
         INVITATION
       </a>
@@ -422,14 +536,10 @@ footer::after {
 
     <div class="relative z-10 mx-auto flex min-h-[calc(100vh-90px)] max-w-5xl flex-col items-center justify-center px-5 pb-14 text-center">
       <p class="mb-5 text-[10px] font-semibold uppercase tracking-[.4em] text-forest/60 sm:text-xs">
-        With the grace of Lord Ganapatiji &amp; divine blessing of<br>Late Smt Panmati Devi &amp; Late Rajdev Singh
+        With the grace of Lord Ganapatiji &amp; divine blessing of<br>Late Smt Panmati Devi &amp; Late Shri Rajdev Singh
       </p>
 
-      <div class="ornament mb-6 text-blush">
-        <svg class="h-4 w-4 text-rosepetal inline-block fill-current" viewBox="0 0 24 24">
-          <path d="M12 2C10.5 5 7 8 7 12s2.5 7 5 9c2.5-2 5-5 5-9s-3.5-7-5-9z"/>
-        </svg>
-      </div>
+       <div class="ornament mb-6 text-marigold text-xl drop-shadow-md"><span>ॐ</span></div>
 
       <h1 class="font-serif text-[3.2rem] leading-[.78] tracking-[-.035em] text-forest sm:text-[7rem] md:text-[8.5rem]">
         Sumit <span class="mx-1 font-sans font-light text-blush sm:mx-3">&amp;</span> Deepa
@@ -513,7 +623,7 @@ footer::after {
               <div>
                 <p class="text-[10px] uppercase tracking-widest text-charcoal/50">Parents of the Bride</p>
                 <p class="mt-1 font-serif text-xl text-forest">Mrs. Bharti Singh<br>&amp; Mr. Gyan Sagar Singh</p>
-              </div>
+              </div>          
             </div>
           </div>
         </div>
@@ -533,7 +643,7 @@ footer::after {
             </div>
 
             <div class="flex aspect-[4/5] items-center justify-center overflow-hidden rounded-[1.75rem] border border-forest/10 shadow-soft bg-champagne/20">
-              <img src="Pink and White Elegant Wedding Photoshoot Instagram Post (1).jpg" alt="Sumit and Deepa" class="h-full w-full object-cover transition duration-700 hover:scale-105">
+              <img src="images/WLCP.jpeg" alt="Deepa and Sumit" class="h-full w-full object-cover transition duration-700 hover:scale-105">
             </div>
           </div>
         </div>
@@ -574,7 +684,7 @@ footer::after {
               <div class="flex items-start justify-between gap-4">
                 <div>
                   <h3 class="font-serif text-3xl text-forest">Shubh Tilak</h3>
-                  <p class="mt-2 text-xs uppercase tracking-[.18em] text-sage">7:00 PM</p>
+                  <p class="mt-2 text-xs uppercase tracking-[.18em] text-sage">Golden Moments</p>
                 </div>
                 <i data-lucide="flower-2" class="mt-1 h-5 w-5 shrink-0 text-blush"></i>
               </div>
@@ -741,6 +851,12 @@ footer::after {
     </div>
   </footer>
 
+ <section class="final-photo-section" aria-label="Deepa and Sumit">
+      <div class="final-photo-wrap">
+        <img src="images/lastp.jpeg" alt="Deepa and Sumit" loading="lazy" decoding="async">
+      </div>
+ </section>
+  
   <script>
     // =========================================================
     // PETAL SHOWER CANVAS SIMULATION
@@ -834,14 +950,27 @@ footer::after {
     const petalCount = 38;
     const petals = Array.from({ length: petalCount }, () => new Petal());
 
+    let petalAnimationFrame;
+
     function animatePetals() {
       ctx.clearRect(0, 0, width, height);
       petals.forEach((petal) => {
         petal.update();
         petal.draw();
       });
-      requestAnimationFrame(animatePetals);
+      petalAnimationFrame = requestAnimationFrame(animatePetals);
     }
+
+    function restartPetals() {
+      if (!petalAnimationFrame) {
+        petalAnimationFrame = requestAnimationFrame(animatePetals);
+      }
+    }
+
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden) restartPetals();
+    });
+
     animatePetals();
 
     // =========================================================
