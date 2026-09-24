@@ -489,6 +489,41 @@ footer::after {
       }
     }
 
+
+    /* =========================================================
+       SLIDESHOW STYLES
+       ========================================================= */
+ .slideshow-frame {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+    
+    .slideshow-frame img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      animation: crossfade-long 40s infinite;
+    }
+
+    /* Stagger the start times by 10 seconds */
+    .slideshow-frame img:nth-child(1) { animation-delay: 0s; }
+    .slideshow-frame img:nth-child(2) { animation-delay: 10s; }
+    .slideshow-frame img:nth-child(3) { animation-delay: 20s; }
+    .slideshow-frame img:nth-child(4) { animation-delay: 30s; }
+
+    /* Keyframes: 2s fade in, 8s hold, 2s fade out */
+    @keyframes crossfade-long {
+      0%   { opacity: 0; }
+      5%   { opacity: 1; }   /* Fully visible at 2s */
+      25%  { opacity: 1; }   /* Starts fading out at 10s */
+      30%  { opacity: 0; }   /* Fully hidden at 12s */
+      100% { opacity: 0; }
+    }
+    
   </style>
 </head>
 
@@ -643,7 +678,12 @@ footer::after {
             </div>
 
             <div class="flex aspect-[4/5] items-center justify-center overflow-hidden rounded-[1.75rem] border border-forest/10 shadow-soft bg-champagne/20">
-              <img src="images/WLCP.jpeg" alt="Deepa and Sumit" class="h-full w-full object-cover transition duration-700 hover:scale-105">
+             <div class="slideshow-frame group">
+                <img src="images/a.jpeg" alt="Deepa and Sumit" fetchpriority="high" class="transition duration-700 group-hover:scale-105">
+                <img src="images/h.jpeg" alt="Deepa and Sumit" loading="lazy" decoding="async" class="transition duration-700 group-hover:scale-105">
+               <img src="images/f.jpeg" alt="Deepa and Sumit" loading="lazy" decoding="async" class="transition duration-700 group-hover:scale-105">
+               <img src="images/g.jpeg" alt="Deepa and Sumit" loading="lazy" decoding="async" class="transition duration-700 group-hover:scale-105">
+            </div>
             </div>
           </div>
         </div>
