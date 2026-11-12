@@ -8,8 +8,10 @@
   <title>Sumit & Deepa | Wedding Invitation</title>
 
   <!-- Preload the first critical image so the preloader can dismiss faster -->
+  <link rel="preload" as="image" href="Jai ganesh.jpg">
   <link rel="preload" as="image" href="images/a.jpeg">
-
+  
+  
   <!-- Elegant serif + clean sans-serif typography -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -457,33 +459,28 @@ footer::after {
       height: 100%;
       object-fit: cover;
       opacity: 0;
-      animation: crossfade-long 40s infinite;
+      /* Changed to a 10-second total loop */
+      animation: crossfade-long 20s infinite;
       
-      /* New: Keeps animation paused by default */
       animation-play-state: paused;
-      
-      /* GPU Acceleration */
       will-change: opacity, transform;
       transform: translateZ(0);
     }
 
-    /* New: Resumes animation when `.color-bloom` is added via scroll */
     .slideshow-frame.color-bloom img {
       animation-play-state: running;
     }
 
-    /* Shifting delays by -2s puts Image 1 exactly at its 5% keyframe (Opacity: 1) while paused */
+    /* Exactly a 5-second gap between the two images */
     .slideshow-frame img:nth-child(1) { animation-delay: -2s; }
     .slideshow-frame img:nth-child(2) { animation-delay: 8s; }
-    .slideshow-frame img:nth-child(3) { animation-delay: 18s; }
-    .slideshow-frame img:nth-child(4) { animation-delay: 28s; }
 
-    /* Keyframes: 2s fade in, 8s hold, 2s fade out */
+    /* Percentages remain the same, but they now execute twice as fast */
     @keyframes crossfade-long {
       0%   { opacity: 0; }
-      5%   { opacity: 1; }   /* Fully visible at 2s */
-      25%  { opacity: 1; }   /* Starts fading out at 10s */
-      30%  { opacity: 0; }   /* Fully hidden at 12s */
+      10%  { opacity: 1; }
+      50%  { opacity: 1; }
+      60%  { opacity: 0; }
       100% { opacity: 0; }
     }
 
@@ -593,15 +590,21 @@ footer::after {
 
   <!-- ========================= ELEGANT PRELOADER ========================= -->
   <div id="preloader" class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-ivory">
-    <div class="text-center">
+    <div class="text-center flex flex-col items-center">
+    
+      <!-- Added Ganesha image to preloader directly above initials -->
+      <img src="Jai ganesh.jpg" alt="Lord Ganesha" class="w-28 sm:w-36 h-auto mb-6 drop-shadow-md animate-pulse mix-blend-multiply">
+      
       <span class="font-serif text-5xl tracking-[.18em] text-forest sm:text-6xl animate-pulse">S <span class="text-blush">&amp;</span> D</span>
       <div class="mt-6 h-[1px] w-24 mx-auto overflow-hidden bg-forest/10">
         <div class="loading-line h-full w-full bg-forest"></div>
       </div>
+      
     </div>
   </div>
 
-   <audio id="wedding-music" src="images/wed-invi.mpeg" loop preload="none"></audio>
+  <!-- Music changed to preload="auto" -->
+  <audio id="wedding-music" src="images/wed-invi.mpeg" loop preload="auto"></audio>
 
 <button
   id="music-toggle"
@@ -751,11 +754,12 @@ footer::after {
             </div>
 
            <div class="sparkle-wrapper flex aspect-[4/5] items-center justify-center overflow-hidden rounded-[1.75rem] p-[3px] shadow-soft transition-shadow duration-500 hover:shadow-[0_0_35px_rgba(255,179,0,0.6)] bg-forest/5">
+              
               <div id="cinematic-frame" class="slideshow-frame cinematic-reveal group relative z-10 h-full w-full overflow-hidden rounded-[1.5rem] bg-white">
+                
                 <img src="images/a.jpeg" alt="Deepa and Sumit" fetchpriority="high" class="transition duration-700 group-hover:scale-105">
+                
                 <img src="images/h.jpeg" alt="Deepa and Sumit" loading="lazy" decoding="async" class="transition duration-700 group-hover:scale-105">
-               <img src="images/f.jpeg" alt="Deepa and Sumit" loading="lazy" decoding="async" class="transition duration-700 group-hover:scale-105">
-               <img src="images/g.jpeg" alt="Deepa and Sumit" loading="lazy" decoding="async" class="transition duration-700 group-hover:scale-105">
                 
                 <!-- Internal Gold Dust Overlay -->
                 <div class="gold-dust-container">
@@ -763,6 +767,7 @@ footer::after {
                 </div>
             
               </div>
+
             </div>
           </div>
         </div>
@@ -969,12 +974,6 @@ footer::after {
       </div>
     </div>
   </footer>
-
- <section class="final-photo-section" aria-label="Deepa and Sumit">
-      <div class="final-photo-wrap">
-        <img src="images/lastp.jpeg" alt="Deepa and Sumit" loading="lazy" decoding="async">
-      </div>
- </section>
   
   <script>
     // =========================================================
@@ -1090,7 +1089,7 @@ footer::after {
     // =========================================================
     // LIVE COUNTDOWN
     // =========================================================
-    const weddingDate = new Date("2026-11-24T00:00:00+05:30").getTime();
+    const weddingDate = new Date("2026-11-24T19:00:00+05:30").getTime();
 
     const daysEl = document.getElementById("days");
     const hoursEl = document.getElementById("hours");
@@ -1107,9 +1106,12 @@ footer::after {
 
       if (distance <= 0) {
         countdownEl.innerHTML = `
-          <div class="col-span-4 rounded-2xl border border-white/80 bg-white/50 px-6 py-5 shadow-soft">
-            <p class="font-serif text-2xl text-forest">The day has arrived. ♡</p>
-          </div>`;
+          <div class="col-span-4 flex items-center justify-center w-full py-2">
+            <span class="font-serif text-xl sm:text-2xl tracking-[.15em] text-forest animate-pulse uppercase">
+              Today is the Celebration
+            </span>
+          </div>
+        `;
         clearInterval(countdownTimer);
         return;
       }
@@ -1177,6 +1179,23 @@ footer::after {
         musicToggle.disabled = true;
       }
     });
+
+    // =========================================================
+    // AUTO-PLAY MUSIC ON FIRST TAP/CLICK
+    // =========================================================
+    let musicStarted = false;
+    document.body.addEventListener('click', async () => {
+      if (!musicStarted && music.paused) {
+        try {
+          await music.play();
+          updateMusicControl(true);
+          musicStarted = true;
+        } catch (error) {
+          // Browser still blocked it, user will just have to use the button
+          console.log("Auto-play waiting for direct button interaction.");
+        }
+      }
+    }, { once: true });
 
     const backToTop = document.getElementById("back-to-top");
     
