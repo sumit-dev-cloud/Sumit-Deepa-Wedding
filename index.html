@@ -1183,19 +1183,31 @@ footer::after {
     // =========================================================
     // AUTO-PLAY MUSIC ON FIRST TAP/CLICK
     // =========================================================
+    // =========================================================
+    // AUTO-PLAY MUSIC ON FIRST TAP/CLICK
+    // =========================================================
     let musicStarted = false;
-    document.body.addEventListener('click', async () => {
+
+    async function startMusicOnInteraction() {
       if (!musicStarted && music.paused) {
         try {
           await music.play();
           updateMusicControl(true);
           musicStarted = true;
+          
+          // Remove both listeners once the music successfully starts
+          document.body.removeEventListener('click', startMusicOnInteraction);
+          document.body.removeEventListener('touchstart', startMusicOnInteraction);
         } catch (error) {
           // Browser still blocked it, user will just have to use the button
           console.log("Auto-play waiting for direct button interaction.");
         }
       }
-    }, { once: true });
+    }
+
+    // Listen for both desktop clicks and mobile finger taps
+    document.body.addEventListener('click', startMusicOnInteraction, { once: true });
+    document.body.addEventListener('touchstart', startMusicOnInteraction, { once: true });
 
     const backToTop = document.getElementById("back-to-top");
     
