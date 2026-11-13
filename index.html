@@ -1183,9 +1183,6 @@ footer::after {
     // =========================================================
     // AUTO-PLAY MUSIC ON FIRST TAP/CLICK
     // =========================================================
-    // =========================================================
-    // AUTO-PLAY MUSIC ON FIRST TAP/CLICK
-    // =========================================================
     let musicStarted = false;
 
     async function startMusicOnInteraction() {
@@ -1195,19 +1192,21 @@ footer::after {
           updateMusicControl(true);
           musicStarted = true;
           
-          // Remove both listeners once the music successfully starts
-          document.body.removeEventListener('click', startMusicOnInteraction);
-          document.body.removeEventListener('touchstart', startMusicOnInteraction);
+          // Only stop listening AFTER the music successfully plays
+          ['click', 'touchend', 'keydown'].forEach(evt => {
+            document.removeEventListener(evt, startMusicOnInteraction);
+          });
         } catch (error) {
-          // Browser still blocked it, user will just have to use the button
-          console.log("Auto-play waiting for direct button interaction.");
+          // If the browser blocks a scroll/swipe, silently wait for the next real tap
         }
       }
     }
 
-    // Listen for both desktop clicks and mobile finger taps
-    document.body.addEventListener('click', startMusicOnInteraction, { once: true });
-    document.body.addEventListener('touchstart', startMusicOnInteraction, { once: true });
+    // Removed { once: true } so it keeps trying until it works
+    // Changed to 'touchend' which mobile browsers prefer for audio permissions
+    ['click', 'touchend', 'keydown'].forEach(evt => {
+      document.addEventListener(evt, startMusicOnInteraction);
+    });
 
     const backToTop = document.getElementById("back-to-top");
     
