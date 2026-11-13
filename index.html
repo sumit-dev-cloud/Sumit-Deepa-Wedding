@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#FAF7F2">
   <meta name="description" content="Wedding invitation for Sumit & Deepa — 24 November 2026, Vadodara, Gujarat.">
   <title>Wedding Invitation</title>
-
+  <link rel="icon" type="image/jpeg" href="images/Favicon1.jpg">
   <!-- Preload the first critical image so the preloader can dismiss faster -->
   <link rel="preload" as="image" href="images/Jai ganesh.jpg">
   <link rel="preload" as="image" href="images/a.jpeg">
@@ -459,8 +459,7 @@ footer::after {
       height: 100%;
       object-fit: cover;
       opacity: 0;
-      /* Changed to a 10-second total loop */
-      animation: crossfade-long 20s infinite;
+      animation: crossfade-long 10s infinite;
       
       animation-play-state: paused;
       will-change: opacity, transform;
@@ -471,11 +470,9 @@ footer::after {
       animation-play-state: running;
     }
 
-    /* Exactly a 5-second gap between the two images */
-    .slideshow-frame img:nth-child(1) { animation-delay: -2s; }
-    .slideshow-frame img:nth-child(2) { animation-delay: 8s; }
+    .slideshow-frame img:nth-child(1) { animation-delay: -1s; }
+    .slideshow-frame img:nth-child(2) { animation-delay: 4s; }
 
-    /* Percentages remain the same, but they now execute twice as fast */
     @keyframes crossfade-long {
       0%   { opacity: 0; }
       10%  { opacity: 1; }
@@ -564,6 +561,22 @@ footer::after {
     body.loading-lock { overflow: hidden; }
     #preloader { transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1); }
     #preloader.loaded { opacity: 0; pointer-events: none; }
+    
+    #loading-line-container { transition: opacity 0.6s ease; }
+    
+    /* "Tap to Open" Button Animation Styles */
+    #open-invite-btn {
+      opacity: 0;
+      transform: translateY(12px);
+      pointer-events: none;
+      transition: opacity 0.8s ease, transform 0.8s ease, background-color 0.3s ease, color 0.3s ease;
+    }
+    #open-invite-btn.ready {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
     @keyframes line-load { 
       0% { transform: scaleX(0); transform-origin: left; } 
       50% { transform: scaleX(1); transform-origin: left; } 
@@ -592,18 +605,23 @@ footer::after {
   <div id="preloader" class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-ivory">
     <div class="text-center flex flex-col items-center">
     
-      <!-- Added Ganesha image to preloader directly above initials -->
       <img src="images/Jai ganesh.jpg" alt="Lord Ganesha" class="w-28 sm:w-36 h-auto mb-6 drop-shadow-md animate-pulse mix-blend-multiply">
       
       <span class="font-serif text-5xl tracking-[.18em] text-forest sm:text-6xl animate-pulse">S <span class="text-blush">&amp;</span> D</span>
-      <div class="mt-6 h-[1px] w-24 mx-auto overflow-hidden bg-forest/10">
+      
+      <!-- The loading line that hides when ready -->
+      <div id="loading-line-container" class="mt-6 h-[1px] w-24 mx-auto overflow-hidden bg-forest/10">
         <div class="loading-line h-full w-full bg-forest"></div>
       </div>
+
+      <!-- The new button that reveals when ready -->
+      <button id="open-invite-btn" class="mt-8 rounded-full border border-forest/20 bg-forest/5 px-8 py-3 text-xs tracking-[.2em] font-semibold text-forest uppercase shadow-sm hover:bg-forest hover:text-white">
+        Tap to Open Invitation
+      </button>
       
     </div>
   </div>
 
-  <!-- Music changed to preload="auto" -->
   <audio id="wedding-music" src="images/wed-invi.mpeg" loop preload="auto"></audio>
 
 <button
@@ -820,7 +838,7 @@ footer::after {
             <div class="order-2 mt-5 rounded-3xl border border-forest/10 bg-ivory p-7 shadow-soft sm:order-1 sm:mt-0 transition duration-300 hover:-translate-y-1 hover:border-blush/50 hover:shadow-md">
               <div class="flex items-start justify-between gap-4">
                 <div>
-                  <h3 class="font-serif text-3xl text-forest">Mehendi &amp; Ladies Sangeet</h3>
+                  <h3 class="font-serif text-3xl text-forest">Mehendi &amp; Sangeet</h3>
                   <p class="mt-2 text-xs uppercase tracking-[.18em] text-sage">6:00 PM</p>
                 </div>
                 <i data-lucide="music-2" class="mt-1 h-5 w-5 shrink-0 text-blush"></i>
@@ -949,7 +967,7 @@ footer::after {
           </p>
           <a href="tel:+919662722378" class="mt-5 inline-flex items-center gap-2 text-sm text-forest transition hover:text-sage">
             <i data-lucide="phone" class="h-4 w-4"></i>
-            +91 9460536767
+            +91 8561069299
           </a>
         </div>
       </div>
@@ -1180,37 +1198,6 @@ footer::after {
       }
     });
 
-    // =========================================================
-    // AUTO-PLAY MUSIC ON FIRST TAP/CLICK
-    // =========================================================
-   let musicStarted = false;
-
-    async function startMusicOnInteraction() {
-      if (!musicStarted && music.paused) {
-        try {
-          await music.play();
-          updateMusicControl(true);
-          musicStarted = true;
-          
-          // Only stop listening AFTER the music successfully plays
-          ['click', 'touchend', 'keydown'].forEach(evt => {
-            document.removeEventListener(evt, startMusicOnInteraction);
-          });
-          window.removeEventListener('scroll', startMusicOnInteraction);
-        } catch (error) {
-          // If the browser blocks a mouse-wheel scroll, silently wait for a real click/tap
-        }
-      }
-    }
-
-    // Listen for clicks, taps, and keyboard presses
-    ['click', 'touchend', 'keydown'].forEach(evt => {
-      document.addEventListener(evt, startMusicOnInteraction);
-    });
-    
-    // Listen for scrolling (works best on mobile where scroll = touch)
-    window.addEventListener('scroll', startMusicOnInteraction, { passive: true });
-
     const backToTop = document.getElementById("back-to-top");
     
     // Optmization: Using Intersection Observer instead of scroll event listeners
@@ -1249,25 +1236,38 @@ footer::after {
     }
 
     // =========================================================
-    // ELEGANT PRELOADER LOGIC
+    // ELEGANT PRELOADER WITH "TAP TO OPEN" REVEAL
     // =========================================================
-    function hidePreloader() {
-      const preloader = document.getElementById('preloader');
-      if (preloader && !preloader.classList.contains('loaded')) {
-        preloader.classList.add('loaded');
-        document.body.classList.remove('loading-lock');
-        setTimeout(() => { preloader.style.display = 'none'; }, 1200);
-      }
+    const preloader = document.getElementById('preloader');
+    const openBtn = document.getElementById('open-invite-btn');
+    const loadingLine = document.getElementById('loading-line-container');
+
+    // Function to hide the loading animation and show the entry button
+    function prepareInvitation() {
+      if (loadingLine) loadingLine.style.opacity = '0';
+      if (openBtn) openBtn.classList.add('ready');
     }
 
-    // Force preloader to hide after 3.5 seconds MAX, even if images are still downloading on slow 4G
-    const preloaderTimeout = setTimeout(hidePreloader, 3500);
-
-    // Hide preloader normally if everything downloads quickly
+    // Show the "Tap to Open" button quickly after resources load, or after a safe 2.5s fallback
     window.addEventListener('load', () => {
-      clearTimeout(preloaderTimeout);
-      // Add a tiny 600ms artificial delay for aesthetic transition
-      setTimeout(hidePreloader, 600);
+      setTimeout(prepareInvitation, 500);
+    });
+    setTimeout(prepareInvitation, 2500);
+
+    // Fade out preloader and instantly start music when the user explicitly taps
+    openBtn.addEventListener('click', async () => {
+      // Hide Preloader
+      preloader.classList.add('loaded');
+      document.body.classList.remove('loading-lock');
+      setTimeout(() => { preloader.style.display = 'none'; }, 1200);
+
+      // Play Background Music
+      try {
+        await music.play();
+        updateMusicControl(true);
+      } catch (error) {
+        console.log("Music auto-play was still blocked by browser policies.");
+      }
     });
   </script>
 </body>
