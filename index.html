@@ -1183,7 +1183,7 @@ footer::after {
     // =========================================================
     // AUTO-PLAY MUSIC ON FIRST TAP/CLICK
     // =========================================================
-    let musicStarted = false;
+   let musicStarted = false;
 
     async function startMusicOnInteraction() {
       if (!musicStarted && music.paused) {
@@ -1196,17 +1196,20 @@ footer::after {
           ['click', 'touchend', 'keydown'].forEach(evt => {
             document.removeEventListener(evt, startMusicOnInteraction);
           });
+          window.removeEventListener('scroll', startMusicOnInteraction);
         } catch (error) {
-          // If the browser blocks a scroll/swipe, silently wait for the next real tap
+          // If the browser blocks a mouse-wheel scroll, silently wait for a real click/tap
         }
       }
     }
 
-    // Removed { once: true } so it keeps trying until it works
-    // Changed to 'touchend' which mobile browsers prefer for audio permissions
+    // Listen for clicks, taps, and keyboard presses
     ['click', 'touchend', 'keydown'].forEach(evt => {
       document.addEventListener(evt, startMusicOnInteraction);
     });
+    
+    // Listen for scrolling (works best on mobile where scroll = touch)
+    window.addEventListener('scroll', startMusicOnInteraction, { passive: true });
 
     const backToTop = document.getElementById("back-to-top");
     
